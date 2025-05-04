@@ -1,98 +1,168 @@
 import tkinter as tk
-from tkinter import messagebox
-from openpyxl import load_workbook
+from tkinter import ttk, messagebox
+from datetime import datetime
+import openpyxl
+import os
 
-# Global lists
-student_list = []
-record_list = []
+EXCEL_FILE = "userdata.xlsx"
+STUDENT_SHEET = "Student_Management"
+CATEGORY_SHEET = "Payment_Categories"
+RECORD_SHEET = "Payment_Records"
 
-# Load data from Excel
-def load_payment_data(excel_path):
-    global student_list, record_list
-    student_list.clear()
-    record_list.clear()
-
-    try:
-        wb = load_workbook(excel_path)
-
-        # Ensure required sheets exist; create if missing
-        if "Student_Management" not in wb.sheetnames:
-            student_sheet = wb.create_sheet("Student_Management")
-            student_sheet.append(["ID", "First Name", "Middle Initial", "Last Name"])
-        if "Payment_Records" not in wb.sheetnames:
-            payment_sheet = wb.create_sheet("Payment_Records")
-            payment_sheet.append(["Student ID", "Student Name", "Amount Paid", "Category"])
-
-        student_sheet = wb["Student_Management"]
-        payment_sheet = wb["Payment_Records"]
-
-        # Load students
-        for row in student_sheet.iter_rows(min_row=2, values_only=True):
-            if row[0] and row[1] and row[3]:  # ID, First Name, Last Name
-                student_id, first_name, _, last_name = row
-                full_name = f"{first_name} {last_name}"
-                student_list.append({"id": student_id, "name": full_name})
-
-        # Load payment records
-        for row in payment_sheet.iter_rows(min_row=2, values_only=True):
-            student_id, student_name, amount_paid, category = row
-            if student_id and student_name and amount_paid and category:
-                record_list.append({
-                    "student_id": student_id,
-                    "student_name": student_name,
-                    "amount_paid": f"₱{amount_paid}",
-                    "payment_category": category
-                })
-
-        # Save back to file in case we added sheets
-        wb.save(excel_path)
-
-    except FileNotFoundError:
-        messagebox.showerror("File Error", f"'{excel_path}' not found.")
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred while loading data:\n{e}")
-
-# GUI page creation
 def create_payment_record_page(parent):
     frame = tk.Frame(parent)
     frame.pack(fill="both", expand=True)
 
-    tk.Label(frame, text="Payment Records", font=("Arial", 24)).pack(pady=10)
+    tk.Label(frame, text="Payment Record Page", font=("Arial", 24)).pack(pady=10)
 
-    # Table
+    # Form Section
+    form_frame = tk.Frame(frame)
+    form_frame.pack(pady=5)
+
+    # Ensure workbook and sheets exist
+    if not os.path.exists(EXCEL_FILE):
+        wb = openpyxl.Workbook()
+        wb.create_sheet(STUDENT_SHEET)
+        wb.create_sheet(CATEGORY_SHEET)
+        wb.create_sheet(RECORD_SHEET)
+        if "Sheet" in wb.sheetnames:
+            del wb["Sheet"]
+        wb.save(EXCEL_FILE)
+
+    # Load student list from Excel
+    def load_student_list():
+        student_list = []
+        wb = openpyxl.load_workbook(EXCEL_FILE)
+        if STUDENT_SHEET in wb.sheetnames:
+            sheet = wb[STUDENT_SHEET]
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if row and row[1]:  # Expecting student ID in column 0 and name in column 1
+                    student_list.append({"id": row[0], "name": row[1]})
+        return student_list
+
+    # Load category list from Excel
+    def load_category_list():
+        category_list = []
+        wb = openpyxl.load_workbook(EXCEL_FILE)
+        if CATEGORY_SHEET in wb.sheetnames:
+            sheet = wb[CATEGORY_SHEET]
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if row and row[0]:
+                    category_list.append(row[0])
+        return category_list
+
+    # Initialize comboboxes first
+    combo_student = ttk.Combobox(form_frame, state="readonly", width=28)
+    combo_student.grid(row=0, column=1, pady=2)
+
+    combo_category = ttk.Combobox(form_frame, state="readonly", width=28)
+    combo_category.grid(row=2, column=1, pady=2)
+
+    tk.Label(form_frame, text="Student Name:").grid(row=0, column=0, sticky="e", padx=5, pady=2)
+    tk.Label(form_frame, text="Amount Paid:").grid(row=1, column=0, sticky="e", padx=5, pady=2)
+    tk.Label(form_frame, text="For:").grid(row=2, column=0, sticky="e", padx=5, pady=2)
+
+    entry_amount = tk.Entry(form_frame, width=30)
+    entry_amount.grid(row=1, column=1, pady=2)
+
+    # Function to update student combobox with the latest student list
+    def update_student_combobox():
+        student_list = load_student_list()
+        student_names = [f"{student['name']} (ID: {student['id']})" for student in student_list]
+        combo_student['values'] = student_names
+        return student_list
+
+    # Function to update category combobox with the latest category list
+    def update_category_combobox():
+        category_list = load_category_list()
+        combo_category['values'] = category_list
+        return category_list
+
+    # Load student and category data for initial display
+    student_list = update_student_combobox()
+    category_list = update_category_combobox()
+
+    # Table Section
     table_frame = tk.Frame(frame)
     table_frame.pack(expand=True, fill="both", padx=20, pady=10)
 
-    tree = tk.ttk.Treeview(table_frame, columns=["ID", "Name", "Amount", "Category"], show="headings")
-
-    for col in ["ID", "Name", "Amount", "Category"]:
+    columns = ("Student ID", "Student Name", "Amount Paid", "Payment Category", "Date & Time")
+    tree = ttk.Treeview(table_frame, columns=columns, show="headings")
+    for col in columns:
         tree.heading(col, text=col)
-        tree.column(col, anchor="center", width=150)
+        tree.column(col, width=150)
 
-    vsb = tk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
-    tree.configure(yscrollcommand=vsb.set)
-
-    tree.pack(side="left", fill="both", expand=True)
+    vsb = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
+    hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=tree.xview)
+    tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
     vsb.pack(side="right", fill="y")
+    hsb.pack(side="bottom", fill="x")
+    tree.pack(expand=True, fill="both")
 
-    # Insert records
-    for record in record_list:
-        tree.insert("", "end", values=[
-            record["student_id"],
-            record["student_name"],
-            record["amount_paid"],
-            record["payment_category"]
-        ])
+    # Save record to Excel and update table
+    def add_record():
+        student_name = combo_student.get().strip()
+        amount = entry_amount.get().strip()
+        category = combo_category.get().strip()
+
+        if not student_name or not amount or not category:
+            messagebox.showerror("Input Error", "All fields are required.")
+            return
+
+        try:
+            float(amount)
+        except ValueError:
+            messagebox.showerror("Input Error", "Amount must be a number.")
+            return
+
+        now = datetime.now()
+        date_time = f"{now.month}/{now.day}/{now.year % 100}, {now.strftime('%I:%M %p')}"
+
+        # Extract student ID
+        student_id = student_name.split(" (ID: ")[-1].split(")")[0]
+        student_name_display = student_name.split(" (ID: ")[0]
+
+        # Append to Treeview
+        tree.insert("", "end", values=(student_id, student_name_display, f"₱{amount}", category, date_time))
+
+        # Append to Excel
+        wb = openpyxl.load_workbook(EXCEL_FILE)
+        if RECORD_SHEET not in wb.sheetnames:
+            wb.create_sheet(RECORD_SHEET)
+        sheet = wb[RECORD_SHEET]
+
+        if sheet.max_row == 1:
+            sheet.append(["Student ID", "Student Name", "Amount Paid", "Payment Category", "Date & Time"])
+
+        sheet.append([student_id, student_name_display, amount, category, date_time])
+        wb.save(EXCEL_FILE)
+
+        # Reset fields
+        combo_student.set("")
+        entry_amount.delete(0, tk.END)
+        combo_category.set("")
+
+    tk.Button(frame, text="Create Permanent Record", command=add_record).pack(pady=10)
+
+    # Load existing payment records from Excel
+    def load_existing_records():
+        tree.delete(*tree.get_children())  # Clear existing entries
+        wb = openpyxl.load_workbook(EXCEL_FILE)
+        if RECORD_SHEET in wb.sheetnames:
+            sheet = wb[RECORD_SHEET]
+            for row in sheet.iter_rows(min_row=2, values_only=True):
+                if row and len(row) >= 5:
+                    tree.insert("", "end", values=(row[0], row[1], f"₱{row[2]}", row[3], row[4]))
+
+    load_existing_records()
+
+    # Function to refresh data every 0.5 second
+    def auto_refresh():
+        student_list = update_student_combobox()  # Refresh student list
+        category_list = update_category_combobox()  # Refresh category list
+        load_existing_records()  # Reload the records
+        frame.after(500, auto_refresh)  # Refresh every 500 milliseconds (0.5 second)
+
+    auto_refresh()  # Start auto-refresh
 
     return frame
-
-# For testing standalone
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.title("Payment Record Page")
-    root.geometry("700x500")
-
-    load_payment_data("userdata.xlsx")
-    create_payment_record_page(root)
-
-    root.mainloop()

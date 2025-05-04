@@ -86,7 +86,7 @@ passWord = Entry(centerFrame, font=("Arial", 15), show="*")
 passWord.insert(1, "Password")
 passWord.grid(row=2, column=0, pady=10)
 
-loginButton = Button(centerFrame, text="Log In", width=20, bg="pink", fg="black", command=lambda: changePage("student_management_page"))
+loginButton = Button(centerFrame, text="Log In", width=20, command=lambda: changePage("student_management_page"))
 loginButton.grid(row=3, column=0, pady=20)
 
 changePage("login_page")

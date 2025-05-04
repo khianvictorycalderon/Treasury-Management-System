@@ -20,8 +20,11 @@ def save_all_students_to_excel():
             sheet.append(["ID", "First Name", "Middle Initial", "Last Name"])
         else:
             sheet = wb["Student_Management"]
-            sheet.delete_rows(2, sheet.max_row)
 
+        # Clear all data except for the header
+        sheet.delete_rows(2, sheet.max_row)
+
+        # Add all students from the list to the sheet
         for student in student_list:
             sheet.append([student['id'], student['first_name'], student['middle_initial'], student['last_name']])
 
@@ -173,11 +176,13 @@ def create_student_management_page(parent):
             messagebox.showwarning("Input Error", "ID, First Name, and Last Name are required.")
             return
 
+        # Check for duplicate ID in memory (student_list)
         for student in student_list:
             if student['id'] == id_value:
                 messagebox.showerror("Duplicate ID", "A student with this ID already exists.")
                 return
 
+        # Add the new student to the in-memory list
         student_list.append({
             'id': id_value,
             'first_name': first_name,
@@ -185,9 +190,16 @@ def create_student_management_page(parent):
             'last_name': last_name
         })
 
+        # Save to Excel
         save_all_students_to_excel()
+
+        # Refresh displayed student list from memory (NOT Excel)
         refresh_student_list()
+
+        # Clear input fields
         clear_fields()
+
+
 
     def delete_student(index):
         sorted_students = sorted(student_list, key=lambda s: (s['last_name'].lower(), s['first_name'].lower()))
