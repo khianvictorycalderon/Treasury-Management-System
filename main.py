@@ -90,7 +90,6 @@ loginButton = Button(centerFrame, text="Log In", width=20, bg="pink", fg="black"
 loginButton.grid(row=3, column=0, pady=20)
 
 changePage("login_page")
-print("Payment Category Page Loaded")
 
 
 window.mainloop()
