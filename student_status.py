@@ -1,10 +1,13 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from openpyxl import load_workbook
+import os
+import time
 
 student_list = []
 record_list = []
 required_payments = {}
+last_modified_time = None  # Track the last modification time of the file
 
 def load_student_status_data(excel_path):
     global student_list, record_list, required_payments
@@ -40,23 +43,21 @@ def load_student_status_data(excel_path):
     # Load payment records
     payment_sheet = wb['Payment_Records']
     for row in payment_sheet.iter_rows(min_row=2, values_only=True):
-        # Skip rows that don't have exactly 5 columns
         if len(row) != 5:
             print(f"Skipping invalid row in Payment_Records: {row}")
             continue
-
-        # Unpack the first 4 columns, ignore the 5th column (assumed unnecessary)
         student_id, student_name, amount_paid, category, _ = row
-
         if not student_id or not category:
             continue
-        
         record_list.append({
             "student_id": student_id,
             "student_name": student_name,
             "amount_paid": float(amount_paid or 0),
             "payment_category": category.lower()
         })
+
+    global last_modified_time
+    last_modified_time = os.path.getmtime(excel_path)  # Store last modified time
 
 def create_student_status_page(parent):
     frame = tk.Frame(parent)
@@ -108,9 +109,7 @@ def create_student_status_page(parent):
     tree.pack(fill="both", expand=True)
 
     def insert_student_row(student):
-        # Get all records for this student
         student_records = [r for r in record_list if r["student_id"] == student["id"]]
-
         payments_by_category = {cat: 0.0 for cat in required_payments.keys()}
         for record in student_records:
             cat = record["payment_category"]
@@ -130,7 +129,24 @@ def create_student_status_page(parent):
     for student in student_list:
         insert_student_row(student)
 
+    def check_for_updates():
+        global last_modified_time
+        current_modified_time = os.path.getmtime("userdata.xlsx")
+        if current_modified_time != last_modified_time:
+            print("Excel file has been updated, refreshing data...")
+            load_student_status_data("userdata.xlsx")
+            tree.delete(*tree.get_children())  # Clear existing rows
+            for student in student_list:
+                insert_student_row(student)  # Re-insert updated rows
+            last_modified_time = current_modified_time  # Update the last modified time
+
+        # Check for updates every 1000 ms (1 second)
+        frame.after(10, check_for_updates)
+
+    # Start the update check loop
+    check_for_updates()
+
     return frame
 
-# This will load the data before the program runs, as it's intended to be used within main.py
+# Initial load of data
 load_student_status_data("userdata.xlsx")
