@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from openpyxl import load_workbook
 import os
-import time
 
 student_list = []
 record_list = []
@@ -33,7 +32,7 @@ def load_student_status_data(excel_path):
         full_name = f"{first_name} {last_name}"
         student_list.append({"id": student_id, "name": full_name})
 
-    # Load required payments
+    # Load required payments (payment categories)
     category_sheet = wb['Payment_Categories']
     for row in category_sheet.iter_rows(min_row=2, values_only=True):
         if row[0] is None: continue
@@ -66,20 +65,19 @@ def create_student_status_page(parent):
     tk.Label(frame, text="Student Status Page", font=("Arial", 24)).pack(pady=10)
 
     # Search bar
-    def search_student():
+    def search_student(event=None):
         query = search_entry.get().strip().lower()
-        if not query:
-            messagebox.showerror("Input Error", "Please enter a student name to search.")
-            return
+        tree.delete(*tree.get_children())  # Clear the current treeview content
 
-        tree.delete(*tree.get_children())
-        match_found = False
-        for student in student_list:
-            if query in student["name"].lower():
+        if not query:  # If search entry is empty, display all students
+            for student in student_list:
                 insert_student_row(student)
-                match_found = True
-        if not match_found:
-            messagebox.showinfo("No Match", "No student matched your search.")
+        else:
+            match_found = False
+            for student in student_list:
+                if query in student["name"].lower():
+                    insert_student_row(student)
+                    match_found = True
 
     search_frame = tk.Frame(frame)
     search_frame.pack(pady=5, fill="x", padx=20)
@@ -87,18 +85,27 @@ def create_student_status_page(parent):
     tk.Label(search_frame, text="Search Student:", font=("Arial", 12)).pack(side="left", padx=5)
     search_entry = tk.Entry(search_frame, width=50)
     search_entry.pack(side="left", fill="x", expand=True, padx=5)
-    tk.Button(search_frame, text="Search", command=search_student).pack(side="left", padx=5)
+
+    # Bind the key release event to trigger search
+    search_entry.bind("<KeyRelease>", search_student)
 
     # Table
     table_frame = tk.Frame(frame)
     table_frame.pack(expand=True, fill="both", padx=20, pady=10)
 
-    columns = ["Student ID", "Student Name"] + [cat.title() for cat in required_payments.keys()]
-    tree = ttk.Treeview(table_frame, columns=columns, show="headings")
+    # Function to create columns dynamically based on payment categories
+    def update_columns():
+        columns = ["Student ID", "Student Name"] + [cat.title() for cat in required_payments.keys()]
+        tree.configure(columns=columns)
 
-    for col in columns:
-        tree.heading(col, text=col)
-        tree.column(col, anchor="center", stretch=True)
+        for col in columns:
+            tree.heading(col, text=col)
+            tree.column(col, anchor="center", stretch=True)
+
+    tree = ttk.Treeview(table_frame, show="headings")
+
+    # Create columns initially
+    update_columns()
 
     vsb = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
     hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=tree.xview)
@@ -134,10 +141,17 @@ def create_student_status_page(parent):
         current_modified_time = os.path.getmtime("userdata.xlsx")
         if current_modified_time != last_modified_time:
             print("Excel file has been updated, refreshing data...")
+
+            # Reload the data and update columns
             load_student_status_data("userdata.xlsx")
+
+            # Update columns and table data
+            update_columns()
+
             tree.delete(*tree.get_children())  # Clear existing rows
             for student in student_list:
                 insert_student_row(student)  # Re-insert updated rows
+
             last_modified_time = current_modified_time  # Update the last modified time
 
         # Check for updates every 1000 ms (1 second)

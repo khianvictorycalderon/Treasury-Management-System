@@ -1,8 +1,13 @@
 from tkinter import *
+from tkinter import messagebox  # For showing error messages
 from student_management import create_student_management_page
 from payment_category import create_payment_category_page
 from payment_record import create_payment_record_page
 from student_status import create_student_status_page
+
+# Correct login credentials
+CORRECT_USERNAME = "admin"
+CORRECT_PASSWORD = "12345678"
 
 # Create root window
 window = Tk()
@@ -20,6 +25,7 @@ paymentRecordPage = create_payment_record_page(window)
 studentStatusPage = create_student_status_page(window)
 
 currentPage = "login_page"  # Default startup page
+
 def changePage(pageName):
     global paymentCategoryPage  # Make sure paymentCategoryPage is global for reference
     
@@ -32,13 +38,17 @@ def changePage(pageName):
     
     global currentPage
     
-    if (pageName == "login_page"):
+    if pageName == "login_page":
+        # Clear the username and password fields when returning to login page (set them to empty)
+        userName.delete(0, END)
+        passWord.delete(0, END)
+        
         currentPage = "login_page"
         loginPage.pack(fill=BOTH, expand=TRUE)
-    elif (pageName == "student_management_page"):
+    elif pageName == "student_management_page":
         currentPage = "student_management_page"
         studentManagementPage.pack(fill=BOTH, expand=TRUE)
-    elif (pageName == "payment_category_page"):
+    elif pageName == "payment_category_page":
         currentPage = "payment_category_page"
         
         if 'paymentCategoryPage' in globals():  # Check if the page already exists
@@ -47,10 +57,10 @@ def changePage(pageName):
         # Create the page again with the updated category list
         paymentCategoryPage = create_payment_category_page(window)
         paymentCategoryPage.pack(fill=BOTH, expand=TRUE)
-    elif (pageName == "payment_record_page"):
+    elif pageName == "payment_record_page":
         currentPage = "payment_record_page"
         paymentRecordPage.pack(fill=BOTH, expand=TRUE)
-    elif (pageName == "student_status_page"):
+    elif pageName == "student_status_page":
         currentPage = "student_status_page"
         studentStatusPage.pack(fill=BOTH, expand=TRUE)
         
@@ -65,7 +75,7 @@ def changePage(pageName):
         menu.add_cascade(label="Student Status", command=lambda: changePage("student_status_page"))
         menu.add_cascade(label="Log Out", command=lambda: changePage("login_page"))
 
-    
+
 # Create a center container inside loginPage
 centerFrame = Frame(loginPage)
 centerFrame.grid(row=0, column=0, sticky="n", pady=240)
@@ -79,17 +89,24 @@ loginLabel = Label(centerFrame, text="Log In", font=("Arial", 40, "bold"))
 loginLabel.grid(row=0, column=0, pady=(0, 30))
 
 userName = Entry(centerFrame, font=("Arial", 15))
-userName.insert(1, "Username")
 userName.grid(row=1, column=0, pady=10)
 
 passWord = Entry(centerFrame, font=("Arial", 15), show="*")
-passWord.insert(1, "Password")
 passWord.grid(row=2, column=0, pady=10)
 
-loginButton = Button(centerFrame, text="Log In", width=20, command=lambda: changePage("student_management_page"))
+# Define login validation function
+def validate_login():
+    entered_username = userName.get()
+    entered_password = passWord.get()
+    
+    if entered_username == CORRECT_USERNAME and entered_password == CORRECT_PASSWORD:
+        changePage("student_management_page")  # Move to the next page on successful login
+    else:
+        messagebox.showerror("Login Failed", "Incorrect username or password. Please try again.")  # Show error message
+
+loginButton = Button(centerFrame, text="Log In", width=20, command=validate_login)
 loginButton.grid(row=3, column=0, pady=20)
 
 changePage("login_page")
-
 
 window.mainloop()
