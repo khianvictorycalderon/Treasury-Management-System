@@ -1,12 +1,38 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 import os
+from openpyxl import Workbook
 
 student_list = []
 record_list = []
 required_payments = {}
 last_modified_time = None  # Track the last modification time of the file
+
+def ensure_excel_file_structure(excel_path):
+    if not os.path.exists(excel_path):
+        # Create a new workbook with the required sheets
+        wb = Workbook()
+        wb.remove(wb.active)  # Remove the default sheet
+
+        wb.create_sheet("Student_Management")
+        wb.create_sheet("Payment_Records")
+        wb.create_sheet("Payment_Categories")
+
+        wb.save(excel_path)
+    else:
+        wb = load_workbook(excel_path)
+        modified = False
+
+        required_sheets = ["Student_Management", "Payment_Records", "Payment_Categories"]
+        for sheet_name in required_sheets:
+            if sheet_name not in wb.sheetnames:
+                wb.create_sheet(sheet_name)
+                modified = True
+
+        if modified:
+            wb.save(excel_path)
+
 
 def load_student_status_data(excel_path):
     global student_list, record_list, required_payments
@@ -163,4 +189,5 @@ def create_student_status_page(parent):
     return frame
 
 # Initial load of data
+ensure_excel_file_structure("userdata.xlsx")
 load_student_status_data("userdata.xlsx")
