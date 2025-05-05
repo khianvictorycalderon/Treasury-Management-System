@@ -85,10 +85,10 @@ loginLabel = Label(centerFrame, text="Log In", font=("Arial", 40, "bold"))
 loginLabel.grid(row=0, column=0, pady=(0, 30))
 
 userName = Entry(centerFrame, font=("Arial", 15))
-userName.grid(row=1, column=0, pady=10)
+userName.grid(row=1, column=0, pady=5)
 
 passWord = Entry(centerFrame, font=("Arial", 15), show="*")
-passWord.grid(row=2, column=0, pady=10)
+passWord.grid(row=2, column=0, pady=5)
 
 # Define login validation function
 def validate_login():
@@ -101,7 +101,7 @@ def validate_login():
         messagebox.showerror("Login Failed", "Incorrect username or password. Please try again.")  # Show error message
 
 loginButton = Button(centerFrame, text="Log In", width=20, command=validate_login)
-loginButton.grid(row=3, column=0, pady=20)
+loginButton.grid(row=3, column=0, pady=5)
 
 changePage("login_page")
 
