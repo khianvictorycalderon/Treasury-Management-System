@@ -23,7 +23,7 @@ def create_payment_record_page(parent):
 
     # Form Section
     form_frame = tk.Frame(frame)
-    form_frame.pack(pady=5)
+    form_frame.pack(pady=5, padx=10)
 
     # Ensure workbook and sheets exist
     if not os.path.exists(EXCEL_FILE):
@@ -96,7 +96,7 @@ def create_payment_record_page(parent):
     tree = ttk.Treeview(table_frame, columns=columns, show="headings")
     for col in columns:
         tree.heading(col, text=col)
-        tree.column(col, width=150)
+        tree.column(col, width=150, anchor="center")
 
     vsb = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
     hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=tree.xview)
