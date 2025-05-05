@@ -1,5 +1,5 @@
 LOGIN_PAGE_BACKGROUND_IMAGE = "images/aniket-deole-M6XC789HLe8-unsplash.jpg"
 STUDENT_MANAGEMENT_BACKGROUND_IMAGE = "images/bg.jpg"
-PAYMENT_CATEGORY_BACKGROUND_IMAGE = "images/kalen-emsley-Bkci_8qcdvQ-unsplash.jpg"
-PAYMENT_RECORD_BACKGROUND_IMAGE = "images/ken-cheung-KonWFWUaAuk-unsplash.jpg"
-STUDENT_STATUS_BACKGROUND_IMAGE = "images/luca-bravo-zAjdgNXsMeg-unsplash.jpg"
+PAYMENT_CATEGORY_BACKGROUND_IMAGE = "images/bg.jpg"
+PAYMENT_RECORD_BACKGROUND_IMAGE = "images/bg.jpg"
+STUDENT_STATUS_BACKGROUND_IMAGE = "images/bg.jpg"
