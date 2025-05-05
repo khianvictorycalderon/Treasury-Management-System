@@ -3,6 +3,8 @@ from tkinter import ttk, messagebox
 from openpyxl import load_workbook, Workbook
 import os
 from openpyxl import Workbook
+from bg_images import *
+from bg_loader import load_bg_image
 
 student_list = []
 record_list = []
@@ -87,6 +89,10 @@ def load_student_status_data(excel_path):
 def create_student_status_page(parent):
     frame = tk.Frame(parent)
     frame.pack(fill="both", expand=True)
+    
+    canvas = tk.Canvas(frame)
+    canvas.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire frame area
+    load_bg_image(canvas, STUDENT_STATUS_BACKGROUND_IMAGE)  # Load the background image
 
     tk.Label(frame, text="Student Status Page", font=("Arial", 24)).pack(pady=10)
 
@@ -108,7 +114,7 @@ def create_student_status_page(parent):
     search_frame = tk.Frame(frame)
     search_frame.pack(pady=5, fill="x", padx=20)
 
-    tk.Label(search_frame, text="Search Student:", font=("Arial", 12)).pack(side="left", padx=5)
+    tk.Label(search_frame, text="Search Student Name:", font=("Arial", 12)).pack(side="left", padx=5)
     search_entry = tk.Entry(search_frame, width=50)
     search_entry.pack(side="left", fill="x", expand=True, padx=5)
 

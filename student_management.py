@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 from openpyxl import Workbook, load_workbook
 import os
+from bg_images import *
+from bg_loader import load_bg_image
 
 student_list = []
 
@@ -43,6 +45,13 @@ def create_student_management_page(parent):
 
     frame = tk.Frame(outer_frame)
     frame.grid(row=0, column=0)
+    
+    canvas = tk.Canvas(outer_frame)
+    canvas.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire frame area
+    load_bg_image(canvas, STUDENT_MANAGEMENT_BACKGROUND_IMAGE)  # Load the background image
+
+    # Ensure that canvas is placed in the correct stacking order
+    canvas.tk.call("lower", canvas._w, None)
 
     tk.Label(frame, text="Student Management", font=("Arial", 40, "bold")).grid(row=0, column=0, columnspan=2, pady=(30, 20))
 
@@ -242,21 +251,3 @@ def create_student_management_page(parent):
     refresh_student_list()
 
     return outer_frame
-
-def main():
-    if not os.path.exists("userdata.xlsx"):
-        wb = Workbook()
-        ws = wb.active
-        ws.title = "Student_Management"
-        ws.append(["ID", "First Name", "Middle Initial", "Last Name"])
-        wb.save("userdata.xlsx")
-        print("Excel file created successfully.")
-
-    root = tk.Tk()
-    root.title("Student Management System")
-    root.geometry("800x600")
-    create_student_management_page(root)
-    root.mainloop()
-
-if __name__ == "__main__":
-    main()

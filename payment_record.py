@@ -3,6 +3,8 @@ from tkinter import ttk, messagebox
 from datetime import datetime
 import openpyxl
 import os
+from bg_images import *
+from bg_loader import load_bg_image
 
 EXCEL_FILE = "userdata.xlsx"
 STUDENT_SHEET = "Student_Management"
@@ -12,6 +14,10 @@ RECORD_SHEET = "Payment_Records"
 def create_payment_record_page(parent):
     frame = tk.Frame(parent)
     frame.pack(fill="both", expand=True)
+    
+    canvas = tk.Canvas(frame)
+    canvas.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire frame area
+    load_bg_image(canvas, PAYMENT_RECORD_BACKGROUND_IMAGE)  # Load the background image
 
     tk.Label(frame, text="Payment Record Page", font=("Arial", 24)).pack(pady=10)
 
@@ -142,7 +148,7 @@ def create_payment_record_page(parent):
         entry_amount.delete(0, tk.END)
         combo_category.set("")
 
-    tk.Button(frame, text="Create Permanent Record", command=add_record).pack(pady=10)
+    tk.Button(form_frame, text="Create Permanent Record", command=add_record).grid(row=3, column=0, sticky="nsew", columnspan=2, padx=5, pady=2)
 
     # Load existing payment records from Excel
     def load_existing_records():
@@ -158,8 +164,6 @@ def create_payment_record_page(parent):
 
     # Function to refresh data every 0.5 second
     def auto_refresh():
-        student_list = update_student_combobox()  # Refresh student list
-        category_list = update_category_combobox()  # Refresh category list
         load_existing_records()  # Reload the records
         frame.after(500, auto_refresh)  # Refresh every 500 milliseconds (0.5 second)
 
