@@ -8,10 +8,10 @@ from bg_loader import load_bg_image
 BLUE = "#4190F3"
 YELLOW = "#F5B940"
 DARK_BLUE = "#17355A"
-GREEN = "#009820"
+GREEN = "#66B857"
 WHITE = "#FFFFFF"
 BG_ENTRY = "#F7FAFC"
-RED = "#F44141"
+RED = "#F46E6E"
 
 student_list = []
 def create_student_management_page(parent):
@@ -149,8 +149,8 @@ def create_student_management_page(parent):
     list_container = tk.Frame(frame, bg=WHITE)
     list_container.grid(row=6, column=0, columnspan=2, pady=20)
 
-    canvas = tk.Canvas(list_container, width=800, height=300, bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
-    scrollbar = tk.Scrollbar(list_container, orient="vertical", command=canvas.yview, width=50)
+    canvas = tk.Canvas(list_container, width=550, height=300, bg=WHITE, highlightthickness=2, highlightbackground=DARK_BLUE)
+    scrollbar = tk.Scrollbar(list_container, orient="vertical", command=canvas.yview, width=25)
     scrollable_frame = tk.Frame(canvas, bg=WHITE)
 
     scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
@@ -173,28 +173,28 @@ def create_student_management_page(parent):
         for index, student in enumerate(sorted_students):
             row_widgets = {}
 
-            id_entry = tk.Entry(scrollable_frame, width=10, font=("Arial", 12))
+            id_entry = tk.Entry(scrollable_frame, width=10, font=("Arial", 12), bg=WHITE, fg=DARK_BLUE, bd=1, relief="solid", justify="center")
             id_entry.insert(0, student['id'])
             id_entry.config(state='disabled')
-            id_entry.grid(row=index, column=0, padx=2, pady=2)
+            id_entry.grid(row=index, column=0, padx=5, pady=5)
             row_widgets['id'] = id_entry
 
-            lname_entry = tk.Entry(scrollable_frame, width=15, font=("Arial", 12))
+            lname_entry = tk.Entry(scrollable_frame, width=15, font=("Arial", 12), bg=WHITE, fg=DARK_BLUE, bd=1, relief="solid", justify="center")
             lname_entry.insert(0, student['last_name'])
             lname_entry.config(state='disabled')
-            lname_entry.grid(row=index, column=1, padx=2, pady=2)
+            lname_entry.grid(row=index, column=1, padx=5, pady=5)
             row_widgets['last_name'] = lname_entry
 
-            fname_entry = tk.Entry(scrollable_frame, width=15, font=("Arial", 12))
+            fname_entry = tk.Entry(scrollable_frame, width=15, font=("Arial", 12), bg=WHITE, fg=DARK_BLUE, bd=1, relief="solid", justify="center")
             fname_entry.insert(0, student['first_name'])
             fname_entry.config(state='disabled')
-            fname_entry.grid(row=index, column=2, padx=2, pady=2)
+            fname_entry.grid(row=index, column=2, padx=5, pady=5)
             row_widgets['first_name'] = fname_entry
 
-            mname_entry = tk.Entry(scrollable_frame, width=5, font=("Arial", 12))
+            mname_entry = tk.Entry(scrollable_frame, width=5, font=("Arial", 12), bg=WHITE, fg=DARK_BLUE, bd=1, relief="solid", justify="center")
             mname_entry.insert(0, student['middle_initial'])
             mname_entry.config(state='disabled')
-            mname_entry.grid(row=index, column=3, padx=2, pady=2)
+            mname_entry.grid(row=index, column=3, padx=5, pady=5)
             row_widgets['middle_initial'] = mname_entry
 
             def make_edit_save_buttons(i, row, s):

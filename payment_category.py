@@ -6,6 +6,14 @@ import os
 from bg_images import *
 from bg_loader import load_bg_image
 
+BLUE = "#4190F3"
+YELLOW = "#F5B940"
+DARK_BLUE = "#17355A"
+GREEN = "#66B857"
+WHITE = "#FFFFFF"
+BG_ENTRY = "#F7FAFC"
+RED = "#F46E6E" 
+
 category_list = []
 EXCEL_FILE = 'userdata.xlsx'
 CATEGORY_SHEET = 'Payment_Categories'
@@ -58,12 +66,12 @@ def export_to_excel():
 
 def create_payment_category_page(parent):
     global category_list
-    outer_frame = Frame(parent)
+    outer_frame = Frame(parent,bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
     outer_frame.pack(fill="both", expand=True)
     outer_frame.grid_rowconfigure(0, weight=1)
     outer_frame.grid_columnconfigure(0, weight=1)
 
-    frame = Frame(outer_frame)
+    frame = Frame(outer_frame,bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
     frame.grid(row=0, column=0)
     
     canvas = tk.Canvas(outer_frame)
@@ -73,36 +81,50 @@ def create_payment_category_page(parent):
     # Ensure that canvas is placed in the correct stacking order
     canvas.tk.call("lower", canvas._w, None)
 
-    Label(frame, text="Payment Category Page", font=("Arial", 40, "bold")).grid(row=0, column=0, columnspan=4, pady=(30, 20))
+    Label(frame, text="Payment Category Page",
+    font=("Segoe UI", 40, "bold"),
+    fg=BLUE, bg=WHITE
+    ).grid(row=0, column=0, columnspan=4, pady=(30, 20))
 
-    input_frame = Frame(frame)
+    input_frame = tk.Frame(frame, bg=WHITE)
     input_frame.grid(row=1, column=0, columnspan=4, pady=10)
+    
+    label_opts = {"font": ("Segoe UI", 14, "bold"), "fg": DARK_BLUE, "bg": WHITE}
+    entry_opts = {
+    "font": ("Segoe UI", 14),
+    "fg": DARK_BLUE,
+    "bg": BG_ENTRY,
+    "highlightthickness": 2,
+    "highlightbackground": BLUE,
+    "relief": tk.FLAT,
+    "bd": 0
+}
 
-    Label(input_frame, text="Payment Category Name:", font=("Arial", 14)).grid(row=0, column=0, padx=10, pady=5, sticky="e")
-    entry_name = Entry(input_frame, width=30, font=("Arial", 14))
+    Label(input_frame, text="Payment Category Name:", **label_opts).grid(row=0, column=0, padx=10, pady=5, sticky="e")
+    entry_name = tk.Entry(input_frame, width=30, **entry_opts)
     entry_name.grid(row=0, column=1, padx=10, pady=5)
 
-    Label(input_frame, text="Required Fund (Per Student):", font=("Arial", 14)).grid(row=1, column=0, padx=10, pady=5, sticky="e")
-    entry_fund = Entry(input_frame, width=30, font=("Arial", 14))
+    Label(input_frame, text="Required Fund (Per Student):", **label_opts).grid(row=1, column=0, padx=10, pady=5, sticky="e")
+    entry_fund = tk.Entry(input_frame, width=30, **entry_opts)
     entry_fund.grid(row=1, column=1, padx=10, pady=5)
     
-    headers = Frame(frame)
-    # Table headers
-    Label(headers, text="Payment Category Name", font=("Arial", 14, "bold"),
-      borderwidth=2, relief="solid", width=40, anchor="center", justify="center")\
-      .grid(row=0, column=0, padx=2, pady=2)
-    Label(headers, text="Required Fund", font=("Arial", 14, "bold"),
-        borderwidth=2, relief="solid", width=25, anchor="center", justify="center")\
-        .grid(row=0, column=1, padx=2, pady=2)
+    headers = tk.Frame(frame, bg=WHITE)
+    tk.Label(headers, text="Payment Category Name", font=("Segoe UI", 14, "bold"),
+         fg=WHITE, bg=BLUE, borderwidth=2, relief="solid", width=40, anchor="center", justify="center")\
+    .grid(row=0, column=0, padx=2, pady=2)
+    tk.Label(headers, text="Required Fund", font=("Segoe UI", 14, "bold"),
+         fg=WHITE, bg=BLUE, borderwidth=2, relief="solid", width=25, anchor="center", justify="center")\
+    .grid(row=0, column=1, padx=2, pady=2)
+
     
     headers.grid(row=2, column=0, columnspan=2) # Make way for the delete button
 
     # Create a frame to hold the table and scrollbar
-    frame_table = Frame(frame, width=500)
+    frame_table = Frame(frame, width=500,bg=WHITE)
     frame_table.grid(row=4, column=0, columnspan=4, pady=10, sticky="nsew")
 
     # Create a canvas to allow scrolling
-    scroll_canvas = tk.Canvas(frame_table)
+    scroll_canvas = tk.Canvas(frame_table,bg=WHITE)
     scroll_canvas.pack(side="left", fill="both", expand=True)
     
     def on_mousewheel(event):
@@ -142,8 +164,11 @@ def create_payment_category_page(parent):
                     export_to_excel()
                     refresh_table()
 
-            Button(table_frame, text="Delete", font=("Arial", 10), command=delete_handler).grid(row=i + 1, column=2, padx=2, pady=2)
-
+            Button(table_frame,  text="Delete",
+                font=("Segoe UI", 10, "bold"),
+                bg=RED, fg=WHITE,
+                activebackground="#C93030", activeforeground=WHITE,
+                bd=0, relief=tk.FLAT, cursor="hand2",)
         # Update the scroll region of the canvas to match the table size
         scroll_canvas.update_idletasks()
         scroll_canvas.config(scrollregion=scroll_canvas.bbox("all"))
@@ -175,7 +200,10 @@ def create_payment_category_page(parent):
         entry_name.delete(0, END)
         entry_fund.delete(0, END)
 
-    btn_add = Button(frame, text="Add Category", font=("Arial", 14), command=add_category)
+    btn_add = Button(frame, text="Add Category",font=("Segoe UI", 14, "bold"),
+    bg=YELLOW, fg=DARK_BLUE,
+    activebackground="#D49E30", activeforeground=DARK_BLUE,
+    bd=0, relief=tk.FLAT, cursor="hand2", command=add_category)
     btn_add.grid(row=3, column=0, columnspan=4, pady=(10, 20))
 
     load_from_excel()
