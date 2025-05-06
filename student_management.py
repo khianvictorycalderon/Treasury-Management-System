@@ -20,7 +20,7 @@ def create_student_management_page(parent):
         bg=DARK_BLUE,
         highlightbackground=DARK_BLUE,
         highlightcolor=DARK_BLUE,
-        highlightthickness=40,
+        highlightthickness=4,
         bd=0
     )
     outer_frame.pack(fill="both", expand=True)
@@ -74,8 +74,10 @@ def create_student_management_page(parent):
 
     # Border frame (the visible border)
     border_frame = tk.Frame(parent, bg=BORDER_COLOR)
-    border_frame.pack(fill="both", expand=True, padx=8, pady=8)  # Adjust padx/pady for border thickness
-
+    border_frame.pack(fill="both", expand=True, padx=10, pady=10)  
+    shadow_frame = tk.Frame(parent, bg="gray", bd=400)  
+    shadow_frame.pack(fill="both", expand=True, padx=15, pady=15)
+    
     # Main content frame inside the border
     outer_frame = tk.Frame(border_frame, bg=WHITE)
     outer_frame.pack(fill="both", expand=True)
@@ -89,20 +91,22 @@ def create_student_management_page(parent):
     canvas.place(x=0, y=0, relwidth=1, relheight=1)
     load_bg_image(canvas, STUDENT_MANAGEMENT_BACKGROUND_IMAGE)
     canvas.tk.call("lower", canvas._w, None)
+    
+   
 
 def create_student_management_page(parent):
     
     global student_list
 
-    outer_frame = tk.Frame(parent,bg=WHITE)
+    outer_frame = tk.Frame(parent,bg=DARK_BLUE)
     outer_frame.pack(fill="both", expand=True)
     outer_frame.grid_rowconfigure(0, weight=1)
     outer_frame.grid_columnconfigure(0, weight=1)
 
-    frame = tk.Frame(outer_frame, bg=WHITE)
+    frame = tk.Frame(outer_frame,width=800, height=300, bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
     frame.grid(row=0, column=0)
     
-    canvas = tk.Canvas(outer_frame, bg=WHITE, highlightthickness=2, highlightbackground=DARK_BLUE)
+    canvas = tk.Canvas(outer_frame, bg=WHITE, highlightthickness=200, highlightbackground=DARK_BLUE)
     canvas.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire frame area
     load_bg_image(canvas, STUDENT_MANAGEMENT_BACKGROUND_IMAGE)  # Load the background image
 
@@ -145,8 +149,8 @@ def create_student_management_page(parent):
     list_container = tk.Frame(frame, bg=WHITE)
     list_container.grid(row=6, column=0, columnspan=2, pady=20)
 
-    canvas = tk.Canvas(list_container, width=600, height=300, bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
-    scrollbar = tk.Scrollbar(list_container, orient="vertical", command=canvas.yview, width=20)
+    canvas = tk.Canvas(list_container, width=800, height=300, bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
+    scrollbar = tk.Scrollbar(list_container, orient="vertical", command=canvas.yview, width=50)
     scrollable_frame = tk.Frame(canvas, bg=WHITE)
 
     scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
