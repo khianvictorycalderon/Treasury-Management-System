@@ -142,7 +142,7 @@ def create_payment_category_page(parent):
                     export_to_excel()
                     refresh_table()
 
-            Button(table_frame, text="Delete", font=("Arial", 10), command=delete_handler).grid(row=i + 1, column=2, padx=2, pady=2)
+            Button(table_frame, text="Delete", bg="#4298BE", fg="white", font=("Arial", 10), command=delete_handler).grid(row=i + 1, column=2, padx=2, pady=2)
 
         # Update the scroll region of the canvas to match the table size
         scroll_canvas.update_idletasks()
@@ -175,7 +175,7 @@ def create_payment_category_page(parent):
         entry_name.delete(0, END)
         entry_fund.delete(0, END)
 
-    btn_add = Button(frame, text="Add Category", font=("Arial", 14), command=add_category)
+    btn_add = Button(frame, text="Add Category", bg="#3889D2", fg="white", font=("Arial", 14), command=add_category)
     btn_add.grid(row=3, column=0, columnspan=4, pady=(10, 20))
 
     load_from_excel()
