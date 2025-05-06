@@ -164,8 +164,10 @@ def create_payment_record_page(parent):
 
     # Function to refresh data every 0.5 second
     def auto_refresh():
-        load_existing_records()  # Reload the records
-        frame.after(500, auto_refresh)  # Refresh every 500 milliseconds (0.5 second)
+        load_existing_records()           # Reload the records
+        update_student_combobox()         # Reload student list
+        update_category_combobox()        # Optional: reload category too
+        frame.after(500, auto_refresh)    # Refresh every 500 milliseconds (0.5 second)
 
     auto_refresh()  # Start auto-refresh
 
