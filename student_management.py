@@ -71,7 +71,7 @@ def create_student_management_page(parent):
     entry_lname = tk.Entry(frame, width=30, font=("Arial", 14))
     entry_lname.grid(row=4, column=1, pady=5)
 
-    tk.Button(frame, text="Add Student", font=("Arial", 14),
+    tk.Button(frame, text="Add Student", bg="#3889D2", fg="white", font=("Arial", 14),
               command=lambda: add_student(entry_id, entry_fname, entry_mname, entry_lname)).grid(row=5, column=0, columnspan=2, pady=(20, 10))
 
     list_container = tk.Frame(frame)
@@ -166,12 +166,12 @@ def create_student_management_page(parent):
 
                 return toggle_edit_save
 
-            edit_button = tk.Button(scrollable_frame, text="Edit", font=("Arial", 10))
+            edit_button = tk.Button(scrollable_frame, text="Edit", bg="#5DAED9", fg="white", font=("Arial", 10))
             edit_button.grid(row=index, column=4, padx=2, pady=2)
             row_widgets['edit_button'] = edit_button
             edit_button.config(command=make_edit_save_buttons(index, row_widgets, student))
 
-            delete_button = tk.Button(scrollable_frame, text="Delete", font=("Arial", 10),
+            delete_button = tk.Button(scrollable_frame, text="Delete", bg="#4298BE", fg="white", font=("Arial", 10),
                                       command=lambda i=index: delete_student(i))
             delete_button.grid(row=index, column=5, padx=2, pady=2)
 
