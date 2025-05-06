@@ -8,6 +8,13 @@ from bg_images import *
 from bg_loader import load_bg_image
 from credential import *
 
+BLUE = "#4190F3"
+YELLOW = "#F5B940"
+DARK_BLUE = "#17355A"
+GREEN = "#009820"
+WHITE = "#FFFFFF"
+BG_ENTRY = "#F7FAFC"
+
 # Create root window
 window = Tk()
 window.title("Treasury Management System")
@@ -73,22 +80,29 @@ def changePage(pageName):
         menu.add_cascade(label="Log Out", command=lambda: changePage("login_page"))
 
 # Create a center container inside loginPage
-centerFrame = Frame(loginPage)
-centerFrame.grid(row=0, column=0, sticky="n", pady=240)
+centerFrame = Frame(loginPage, bg=WHITE, bd=2, relief=RIDGE, padx=40, pady=40)
+centerFrame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # Make loginPage expand and center the content
 loginPage.grid_rowconfigure(0, weight=1)
 loginPage.grid_columnconfigure(0, weight=1)
 
 # Add login widgets inside centerFrame
-loginLabel = Label(centerFrame, text="Log In", font=("Arial", 40, "bold"))
-loginLabel.grid(row=0, column=0, pady=(0, 30))
+loginLabel = Label(centerFrame, text="Log In", font=("Segoe UI", 36, "bold"), fg=BLUE, bg=WHITE)
+loginLabel.grid(row=0, column=0, columnspan=2, pady=(0, 30))
 
-userName = Entry(centerFrame, font=("Arial", 15))
-userName.grid(row=1, column=0, pady=5)
+Label(centerFrame, text="Username", font=("Segoe UI", 14, "bold"), fg=DARK_BLUE, bg=WHITE).grid(row=1, column=0, sticky="e", padx=10, pady=8)
+userName = Entry(centerFrame, font=("Segoe UI", 14), fg=DARK_BLUE, bg=BG_ENTRY,
+                 highlightthickness=2, highlightbackground=DARK_BLUE, relief=FLAT, bd=0, width=22)
+userName.grid(row=1, column=1, pady=8, ipady=4)
 
-passWord = Entry(centerFrame, font=("Arial", 15), show="*")
-passWord.grid(row=2, column=0, pady=5)
+Label(centerFrame, text="Password", font=("Segoe UI", 14, "bold"), fg=DARK_BLUE, bg=WHITE).grid(row=2, column=0, sticky="e", padx=10, pady=8)
+passWord = Entry(centerFrame, font=("Segoe UI", 14), fg=DARK_BLUE, bg=BG_ENTRY, show="*",
+                 highlightthickness=2, highlightbackground=DARK_BLUE, relief=FLAT, bd=0, width=22)
+passWord.grid(row=2, column=1, pady=8, ipady=4)
+
+def on_login_enter(e): loginButton.config(bg="#007A17")
+def on_login_leave(e): loginButton.config(bg=BLUE)
 
 # Define login validation function
 def validate_login():
@@ -100,8 +114,24 @@ def validate_login():
     else:
         messagebox.showerror("Login Failed", "Incorrect username or password. Please try again.")  # Show error message
 
-loginButton = Button(centerFrame, text="Log In", width=20, command=validate_login)
-loginButton.grid(row=3, column=0, pady=5)
+loginButton = Button(centerFrame, text="Log In", font=("Segoe UI", 14, "bold"),
+                     bg=GREEN, fg=WHITE, activebackground="#007A17", activeforeground=WHITE,
+                     bd=0, relief=FLAT, cursor="hand2", width=18, command=validate_login)
+loginButton.grid(row=3, column=0, columnspan=2, pady=(25, 10))
+loginButton.bind("<Enter>", on_login_enter)
+loginButton.bind("<Leave>", on_login_leave)
+
+# --- Forgot Password (Yellow, hover effect) ---
+def on_forgot_enter(e): forgotButton.config(bg=WHITE)
+def on_forgot_leave(e): forgotButton.config(bg=WHITE)
+
+forgotButton = Button(centerFrame, text="Forgot Password?", font=("Segoe UI", 12, "bold"),
+                      bg=WHITE, fg=BLUE, activebackground=WHITE, activeforeground=WHITE,
+                      bd=0, relief=FLAT, cursor="hand2", width=18,
+                      command=lambda: messagebox.showinfo("Forgot Password", "Please contact admin."))
+forgotButton.grid(row=4, column=0, columnspan=2, pady=(0, 5))
+forgotButton.bind("<Enter>", on_forgot_enter)
+forgotButton.bind("<Leave>", on_forgot_leave)
 
 changePage("login_page")
 

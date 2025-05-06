@@ -5,7 +5,27 @@ import os
 from bg_images import *
 from bg_loader import load_bg_image
 
+BLUE = "#4190F3"
+YELLOW = "#F5B940"
+DARK_BLUE = "#17355A"
+GREEN = "#009820"
+WHITE = "#FFFFFF"
+BG_ENTRY = "#F7FAFC"
+RED = "#F44141"
+
 student_list = []
+def create_student_management_page(parent):
+    outer_frame = tk.Frame(
+        parent,
+        bg=DARK_BLUE,
+        highlightbackground=DARK_BLUE,
+        highlightcolor=DARK_BLUE,
+        highlightthickness=40,
+        bd=0
+    )
+    outer_frame.pack(fill="both", expand=True)
+    outer_frame.grid_rowconfigure(3, weight=3)
+    outer_frame.grid_columnconfigure(3, weight=3)
 
 def save_all_students_to_excel():
     try:
@@ -35,51 +55,99 @@ def save_all_students_to_excel():
     except Exception as e:
         messagebox.showerror("Error", f"Failed to save students: {e}")
 
+label_opts = {"font": ("Segoe UI", 14, "bold"), "fg": DARK_BLUE, "bg": WHITE}
+entry_opts = {
+    "font": ("Segoe UI", 14),
+    "fg": DARK_BLUE,
+    "bg": BG_ENTRY,
+    "highlightthickness": 2,
+    "highlightbackground": DARK_BLUE,
+    "relief": tk.FLAT,
+    "bd": 0
+}
+
 def create_student_management_page(parent):
     global student_list
 
-    outer_frame = tk.Frame(parent)
+    BORDER_COLOR = "#4190F3"
+    WHITE = "#FFFFFF"
+
+    # Border frame (the visible border)
+    border_frame = tk.Frame(parent, bg=BORDER_COLOR)
+    border_frame.pack(fill="both", expand=True, padx=8, pady=8)  # Adjust padx/pady for border thickness
+
+    # Main content frame inside the border
+    outer_frame = tk.Frame(border_frame, bg=WHITE)
     outer_frame.pack(fill="both", expand=True)
     outer_frame.grid_rowconfigure(0, weight=1)
     outer_frame.grid_columnconfigure(0, weight=1)
 
-    frame = tk.Frame(outer_frame)
+    frame = tk.Frame(outer_frame, bg=WHITE)
     frame.grid(row=0, column=0)
     
-    canvas = tk.Canvas(outer_frame)
+    canvas = tk.Canvas(outer_frame, bg=WHITE)
+    canvas.place(x=0, y=0, relwidth=1, relheight=1)
+    load_bg_image(canvas, STUDENT_MANAGEMENT_BACKGROUND_IMAGE)
+    canvas.tk.call("lower", canvas._w, None)
+
+def create_student_management_page(parent):
+    
+    global student_list
+
+    outer_frame = tk.Frame(parent,bg=WHITE)
+    outer_frame.pack(fill="both", expand=True)
+    outer_frame.grid_rowconfigure(0, weight=1)
+    outer_frame.grid_columnconfigure(0, weight=1)
+
+    frame = tk.Frame(outer_frame, bg=WHITE)
+    frame.grid(row=0, column=0)
+    
+    canvas = tk.Canvas(outer_frame, bg=WHITE, highlightthickness=2, highlightbackground=DARK_BLUE)
     canvas.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire frame area
     load_bg_image(canvas, STUDENT_MANAGEMENT_BACKGROUND_IMAGE)  # Load the background image
 
     # Ensure that canvas is placed in the correct stacking order
     canvas.tk.call("lower", canvas._w, None)
 
-    tk.Label(frame, text="Student Management", font=("Arial", 40, "bold")).grid(row=0, column=0, columnspan=2, pady=(30, 20))
-
-    tk.Label(frame, text="ID:", font=("Arial", 14)).grid(row=1, column=0, sticky="e", padx=10, pady=5)
-    entry_id = tk.Entry(frame, width=30, font=("Arial", 14))
+    tk.Label(frame, text="Student Management", font=("Segoe UI", 40, "bold"), fg=BLUE, bg=WHITE).grid(row=0, column=0, columnspan=2, pady=(30, 20))
+    
+    tk.Label(frame, text="ID:", **label_opts).grid(row=1, column=0, sticky="e", padx=10, pady=5)
+    entry_id = tk.Entry(frame, width=30, **entry_opts)
     entry_id.grid(row=1, column=1, pady=5)
 
-    tk.Label(frame, text="First Name:", font=("Arial", 14)).grid(row=2, column=0, sticky="e", padx=10, pady=5)
-    entry_fname = tk.Entry(frame, width=30, font=("Arial", 14))
+    tk.Label(frame, text="First Name:", **label_opts).grid(row=2, column=0, sticky="e", padx=10, pady=5)
+    entry_fname = tk.Entry(frame, width=30, **entry_opts)
     entry_fname.grid(row=2, column=1, pady=5)
 
-    tk.Label(frame, text="Middle Initial:", font=("Arial", 14)).grid(row=3, column=0, sticky="e", padx=10, pady=5)
-    entry_mname = tk.Entry(frame, width=30, font=("Arial", 14))
+    tk.Label(frame, text="Middle Initial:", **label_opts).grid(row=3, column=0, sticky="e", padx=10, pady=5)
+    entry_mname = tk.Entry(frame, width=30, **entry_opts)
     entry_mname.grid(row=3, column=1, pady=5)
 
-    tk.Label(frame, text="Last Name:", font=("Arial", 14)).grid(row=4, column=0, sticky="e", padx=10, pady=5)
-    entry_lname = tk.Entry(frame, width=30, font=("Arial", 14))
+
+    tk.Label(frame, text="Last Name:", **label_opts).grid(row=4, column=0, sticky="e", padx=10, pady=5)
+    entry_lname = tk.Entry(frame, width=30, **entry_opts)
     entry_lname.grid(row=4, column=1, pady=5)
-
-    tk.Button(frame, text="Add Student", font=("Arial", 14),
-              command=lambda: add_student(entry_id, entry_fname, entry_mname, entry_lname)).grid(row=5, column=0, columnspan=2, pady=(20, 10))
-
-    list_container = tk.Frame(frame)
+    def on_add_enter(e): add_btn.config(bg="#D49E30")
+    def on_add_leave(e): add_btn.config(bg=YELLOW)
+    
+    add_btn = tk.Button(
+    frame, text="Add Student",
+    font=("Segoe UI", 14, "bold"),
+    bg=YELLOW, fg=DARK_BLUE,
+    activebackground="#D49E30", activeforeground=DARK_BLUE,
+    bd=0, relief=tk.FLAT, cursor="hand2",
+    command=lambda: add_student(entry_id, entry_fname, entry_mname, entry_lname)
+)
+    add_btn.grid(row=5, column=0, columnspan=2, pady=(20, 10))
+    add_btn.bind("<Enter>", on_add_enter)
+    add_btn.bind("<Leave>", on_add_leave)
+   
+    list_container = tk.Frame(frame, bg=WHITE)
     list_container.grid(row=6, column=0, columnspan=2, pady=20)
 
-    canvas = tk.Canvas(list_container, width=600, height=300)
+    canvas = tk.Canvas(list_container, width=600, height=300, bg=WHITE, highlightthickness=1, highlightbackground=DARK_BLUE)
     scrollbar = tk.Scrollbar(list_container, orient="vertical", command=canvas.yview, width=20)
-    scrollable_frame = tk.Frame(canvas)
+    scrollable_frame = tk.Frame(canvas, bg=WHITE)
 
     scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
     canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
@@ -166,13 +234,13 @@ def create_student_management_page(parent):
 
                 return toggle_edit_save
 
-            edit_button = tk.Button(scrollable_frame, text="Edit", font=("Arial", 10))
-            edit_button.grid(row=index, column=4, padx=2, pady=2)
+            edit_button = tk.Button(scrollable_frame, text="Edit", font=("Arial", 10),fg=WHITE, bg=GREEN)
+            edit_button.grid(row=index, column=4, padx=2, pady=2,)
             row_widgets['edit_button'] = edit_button
             edit_button.config(command=make_edit_save_buttons(index, row_widgets, student))
 
-            delete_button = tk.Button(scrollable_frame, text="Delete", font=("Arial", 10),
-                                      command=lambda i=index: delete_student(i))
+            delete_button = tk.Button(scrollable_frame, text="Delete", font=("Arial", 10,),
+                                      command=lambda i=index: delete_student(i),fg=WHITE,bg=RED)
             delete_button.grid(row=index, column=5, padx=2, pady=2)
 
     def add_student(entry_id, entry_fname, entry_mname, entry_lname):
