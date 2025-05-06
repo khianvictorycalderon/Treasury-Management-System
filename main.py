@@ -100,7 +100,7 @@ def validate_login():
     else:
         messagebox.showerror("Login Failed", "Incorrect username or password. Please try again.")  # Show error message
 
-loginButton = Button(centerFrame, text="Log In", width=20, command=validate_login)
+loginButton = Button(centerFrame, text="Log In", width=20, bg="#1A7FB7", fg="white", command=validate_login)
 loginButton.grid(row=3, column=0, pady=5)
 
 changePage("login_page")
