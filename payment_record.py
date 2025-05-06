@@ -148,7 +148,7 @@ def create_payment_record_page(parent):
         entry_amount.delete(0, tk.END)
         combo_category.set("")
 
-    tk.Button(form_frame, text="Create Permanent Record", command=add_record).grid(row=3, column=0, sticky="nsew", columnspan=2, padx=5, pady=2)
+    tk.Button(form_frame, text="Create Permanent Record", bg="#3889D2", fg="white", command=add_record).grid(row=3, column=0, sticky="nsew", columnspan=2, padx=5, pady=2)
 
     # Load existing payment records from Excel
     def load_existing_records():
