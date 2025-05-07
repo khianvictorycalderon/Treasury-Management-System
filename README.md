@@ -2,6 +2,8 @@
 
 A simple tkinter + openpyxl in python that records every student's payment as well as display it.
 
+`Treasury-Management-System.exe` is the build file of the program.
+
 A 2nd semester finals project in ITCS103 computer programming 2 by Sir [Rovie](https://github.com/itzzmerov)
 
 ----------------
