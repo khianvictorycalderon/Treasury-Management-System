@@ -7,6 +7,7 @@ from student_status import create_student_status_page
 from bg_images import *
 from bg_loader import load_bg_image
 from credential import *
+from icon import *
 
 BLUE = "#4190F3"
 YELLOW = "#F5B940"
@@ -19,7 +20,9 @@ BG_ENTRY = "#F7FAFC"
 window = Tk()
 window.title("Treasury Management System")
 window.state("zoomed")
-window.iconphoto(True, PhotoImage(file="Treasury_Management_Logo_Small_Icon.png"))
+raw_base64 = ICON_BASE_64.split(",", 1)[1]
+icon = PhotoImage(data=raw_base64)
+window.iconphoto(True, icon)
 
 # Create pages as frames
 loginPage = Frame(window)
