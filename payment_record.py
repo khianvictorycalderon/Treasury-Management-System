@@ -90,13 +90,13 @@ def create_payment_record_page(parent):
 
     # Table Section
     table_frame = tk.Frame(frame)
-    table_frame.pack(expand=True, fill="both", padx=20, pady=10)
+    table_frame.pack(expand=True, padx=20, pady=10)
 
     columns = ("Student ID", "Student Name", "Amount Paid", "Payment Category", "Date & Time")
     tree = ttk.Treeview(table_frame, columns=columns, show="headings")
     for col in columns:
         tree.heading(col, text=col)
-        tree.column(col, width=150, anchor="center")
+        tree.column(col, width=190, anchor="center")
 
     vsb = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
     hsb = ttk.Scrollbar(table_frame, orient="horizontal", command=tree.xview)
