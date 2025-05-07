@@ -80,7 +80,7 @@ def changePage(pageName):
         menu.add_cascade(label="Log Out", command=lambda: changePage("login_page"))
 
 # Create a center container inside loginPage
-centerFrame = Frame(loginPage, bg=WHITE, bd=2, relief=RIDGE, padx=40, pady=40)
+centerFrame = Frame(loginPage, bg=WHITE, bd=2, relief=RIDGE, padx=70, pady=40)
 centerFrame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
 # Make loginPage expand and center the content
@@ -115,19 +115,19 @@ def validate_login():
         messagebox.showerror("Login Failed", "Incorrect username or password. Please try again.")  # Show error message
 
 loginButton = Button(centerFrame, text="Log In", font=("Segoe UI", 14, "bold"),
-                     bg=GREEN, fg=WHITE, activebackground="#007A17", activeforeground=WHITE,
+                     bg=BLUE, fg=WHITE, activebackground=GREEN, activeforeground=WHITE,
                      bd=0, relief=FLAT, cursor="hand2", width=18, command=validate_login)
 loginButton.grid(row=3, column=0, columnspan=2, pady=(25, 10))
 loginButton.bind("<Enter>", on_login_enter)
 loginButton.bind("<Leave>", on_login_leave)
 
-# --- Forgot Password (Yellow, hover effect) ---
+# --- Forgot Password (hided) ---
 def on_forgot_enter(e): forgotButton.config(bg=WHITE)
 def on_forgot_leave(e): forgotButton.config(bg=WHITE)
 
 forgotButton = Button(centerFrame, text="Forgot Password?", font=("Segoe UI", 12, "bold"),
-                      bg=WHITE, fg=BLUE, activebackground=WHITE, activeforeground=WHITE,
-                      bd=0, relief=FLAT, cursor="hand2", width=18,
+                      bg=WHITE, fg=WHITE, activebackground=WHITE, activeforeground=WHITE,
+                      bd=0, relief=FLAT, width=18,
                       command=lambda: messagebox.showinfo("Forgot Password", "Please contact admin."))
 forgotButton.grid(row=4, column=0, columnspan=2, pady=(0, 5))
 forgotButton.bind("<Enter>", on_forgot_enter)

@@ -6,6 +6,13 @@ from openpyxl import Workbook
 from bg_images import *
 from bg_loader import load_bg_image
 
+BLUE = "#4190F3"
+YELLOW = "#F5B940"
+DARK_BLUE = "#17355A"
+GREEN = "#009820"
+WHITE = "#FFFFFF"
+BG_ENTRY = "#F7FAFC"
+
 student_list = []
 record_list = []
 required_payments = {}
@@ -87,14 +94,14 @@ def load_student_status_data(excel_path):
     last_modified_time = os.path.getmtime(excel_path)  # Store last modified time
 
 def create_student_status_page(parent):
-    frame = tk.Frame(parent)
+    frame = tk.Frame(parent,bg=WHITE, highlightthickness=2, highlightbackground=DARK_BLUE)
     frame.pack(fill="both", expand=True)
     
-    canvas = tk.Canvas(frame)
+    canvas = tk.Canvas(frame,bg=WHITE, highlightthickness=2, highlightbackground=DARK_BLUE)
     canvas.place(x=0, y=0, relwidth=1, relheight=1)  # Cover the entire frame area
     load_bg_image(canvas, STUDENT_STATUS_BACKGROUND_IMAGE)  # Load the background image
 
-    tk.Label(frame, text="Student Status Page", font=("Arial", 24)).pack(pady=10)
+    tk.Label(frame, text="Student Status Page", font=("Segoe UI", 32, "bold"),fg="#4190F3",  bg="#FFFFFF", highlightthickness=2, highlightbackground=DARK_BLUE).pack(pady=24)
 
     # Search bar
     def search_student(event=None):
@@ -111,12 +118,28 @@ def create_student_status_page(parent):
                     insert_student_row(student)
                     match_found = True
 
-    search_frame = tk.Frame(frame)
+    search_frame = tk.Frame(frame,bg=WHITE, highlightthickness=2, highlightbackground=DARK_BLUE)
     search_frame.pack(pady=5, fill="x", padx=20)
 
-    tk.Label(search_frame, text="Search Student Name:", font=("Arial", 12)).pack(side="left", padx=5)
-    search_entry = tk.Entry(search_frame, width=50)
-    search_entry.pack(side="left", fill="x", expand=True, padx=5)
+    tk.Label(
+        search_frame,
+        text="Search Student Name:",
+        font=("Arial", 12, "bold"),
+        fg="#17355A"
+    ).pack(side="left", padx=8, pady=6)
+
+    search_entry = tk.Entry(
+        search_frame,
+        width=50,
+        font=("Arial", 12),
+        fg="#17355A",         # Dark blue text
+        bg="#F7FAFC",         # Light background
+        highlightthickness=2,
+        highlightbackground="#4190F3",  # Blue border
+        relief=tk.FLAT,
+        bd=0
+    )
+    search_entry.pack(side="left", fill="x", expand=True, padx=8, pady=6)
 
     # Bind the key release event to trigger search
     search_entry.bind("<KeyRelease>", search_student)

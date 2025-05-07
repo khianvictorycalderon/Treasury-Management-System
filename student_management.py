@@ -131,15 +131,22 @@ def create_student_management_page(parent):
     tk.Label(frame, text="Last Name:", **label_opts).grid(row=4, column=0, sticky="e", padx=10, pady=5)
     entry_lname = tk.Entry(frame, width=30, **entry_opts)
     entry_lname.grid(row=4, column=1, pady=5)
-    def on_add_enter(e): add_btn.config(bg="#D49E30")
-    def on_add_leave(e): add_btn.config(bg=YELLOW)
+    def on_add_enter(e): add_btn.config(bg="#007A17")
+    def on_add_leave(e): add_btn.config(bg="#009820")
     
     add_btn = tk.Button(
-    frame, text="Add Student",
+    frame,
+    text="Add Student",
     font=("Segoe UI", 14, "bold"),
-    bg=YELLOW, fg=DARK_BLUE,
-    activebackground="#D49E30", activeforeground=DARK_BLUE,
-    bd=0, relief=tk.FLAT, cursor="hand2",
+    bg="#009820",                # Green background
+    fg="white",                  # White text
+    highlightthickness=2,
+    highlightbackground=DARK_BLUE,  # Blue border
+    activebackground="#007A17",  # Darker green on press/hover
+    activeforeground="white",
+    bd=0,
+    relief=tk.FLAT,
+    cursor="hand2",
     command=lambda: add_student(entry_id, entry_fname, entry_mname, entry_lname)
 )
     add_btn.grid(row=5, column=0, columnspan=2, pady=(20, 10))

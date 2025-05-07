@@ -200,10 +200,21 @@ def create_payment_category_page(parent):
         entry_name.delete(0, END)
         entry_fund.delete(0, END)
 
-    btn_add = Button(frame, text="Add Category",font=("Segoe UI", 14, "bold"),
-    bg=YELLOW, fg=DARK_BLUE,
-    activebackground="#D49E30", activeforeground=DARK_BLUE,
-    bd=0, relief=tk.FLAT, cursor="hand2", command=add_category)
+    btn_add = tk.Button(
+        frame,
+        text="Add Category",
+        font=("Segoe UI", 14, "bold"),
+        bg="#009820",
+        fg="white",
+        highlightthickness=2,
+        highlightbackground="#4190F3",
+        activebackground="#007A17",
+        activeforeground="white",
+        bd=0,
+        relief=tk.FLAT,
+        cursor="hand2",
+        command=add_category
+    )
     btn_add.grid(row=3, column=0, columnspan=4, pady=(10, 20))
 
     load_from_excel()
