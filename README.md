@@ -6,6 +6,14 @@ Contains the source files and the `Treasury-Management-System.exe` which is the 
 
 ---
 
+Default account:
+
+Username:admin
+
+Password:12345678
+
+---
+
 A 2nd semester finals project in ITCS103 computer programming 2 by Sir [Rovie](https://github.com/itzzmerov)
 
 We are BSIT-1A at [Dalubhasaan ng Lungsod ng Lucena](https://dll.edu.ph/) (2024 - 2025)
