@@ -112,10 +112,10 @@ def create_student_status_page(parent):
                     match_found = True
 
     search_frame = tk.Frame(frame)
-    search_frame.pack(pady=5, fill="x", padx=20)
+    search_frame.pack(pady=5, padx=20)
 
     tk.Label(search_frame, text="Search Student Name:", font=("Arial", 12)).pack(side="left", padx=5)
-    search_entry = tk.Entry(search_frame, width=50)
+    search_entry = tk.Entry(search_frame, width=100)
     search_entry.pack(side="left", fill="x", expand=True, padx=5)
 
     # Bind the key release event to trigger search
@@ -123,7 +123,7 @@ def create_student_status_page(parent):
 
     # Table
     table_frame = tk.Frame(frame)
-    table_frame.pack(expand=True, fill="both", padx=20, pady=10)
+    table_frame.pack(expand=True, padx=20, pady=10)
 
     # Function to create columns dynamically based on payment categories
     def update_columns():
@@ -132,7 +132,7 @@ def create_student_status_page(parent):
 
         for col in columns:
             tree.heading(col, text=col)
-            tree.column(col, anchor="center", stretch=True)
+            tree.column(col, width= 190, anchor="center")
 
     tree = ttk.Treeview(table_frame, show="headings")
 
