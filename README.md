@@ -31,9 +31,9 @@ Documentations:
 - Karl Louise Sebuc
 
 Designing:
-- Dishiela Camunag (Designing Leader)
+- Dishiela Ingrid Camunag (Designing Leader)
 - Mark Angelo Talento
-- Rica Quintillan
+- Rica Mae Quintillan
 
 Tkinter developers:
 - Teryx Zarsadias (Tkinter Dev Leader)
